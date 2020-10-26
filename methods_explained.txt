@@ -1,0 +1,143 @@
+denoiser:
+Autoencoder / Denoising Autoencoder: https://www.jeremyjordan.me/autoencoders/
+Fully-convolutional-networks: https://jianchao-li.github.io/post/understanding-fully-convolutional-networks/
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+evaluator:
+Convolutional neural network (CNN): https://cs231n.github.io/convolutional-networks/
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+handy_helper: (no Deep Learning only Computer Vision)
+Gaussian-Blur: https://www.pixelstech.net/article/1353768112-Gaussian-Blur-Algorithm
+Thresholding: https://robotacademy.net.au/lesson/image-thresholding/
+Contours: https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+text_classifier: 
+
+Latent Dirichlet Allocation (LDA): 
+https://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf     
+https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation
+
+Text Summarization:
+https://arxiv.org/abs/1910.13461
+https://www.facebook.com/FacebookAI/videos/bart-model-summary-generation/969182586851981/
+
+Word Embedding: 
+https://www.tensorflow.org/tutorials/text/word_embeddings
+
+Bert Word Embedding:
+https://mccormickml.com/2019/05/14/BERT-word-embeddings-tutorial/
+
+Transformer: 
+https://www.youtube.com/watch?v=S27pHKBEp30   
+http://jalammar.github.io/illustrated-transformer/
+
+BERT / DistilBERT: 
+https://arxiv.org/abs/1810.04805
+https://arxiv.org/abs/1910.01108
+https://www.kdnuggets.com/2019/09/bert-roberta-distilbert-xlnet-one-use.html
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+!!!! (Depracted) take a look in the README.md !!!!
+
+Manual: 
+How to train the text classifier ?
+Nvidia GPU >= 8 GB vram
+
+1.
+you need a folder structure like this:
+
+main folder -> subfolder with the label names (will automatic splitted at the upper letter)-> pdfs inside (german and english supported)
+min ~20 files per folder (english and german mixed)
+
+MachineLearning
+              |
+              |_boxenSport: name1.pdf, name2.pdf, ..
+              |
+              |_china: name1.pdf, name2.pdf, ..
+              |
+              |_chinaPolitik: name1.pdf, name2.pdf, ..
+              |
+              |_chinaRezept: name1.pdf, name2.pdf, ..
+              |
+              |_corona: name1.pdf, name2.pdf, ..
+              |
+              |_italienPolitik: name1.pdf, name2.pdf, ..
+              |
+              |_italienRezept: name1.pdf, name2.pdf, ..
+              |
+              |_politik: name1.pdf, name2.pdf, ..
+              |
+              |_python: name1.pdf, name2.pdf, ..
+              |
+              |_pythonTypisierung: name1.pdf, name2.pdf, ..
+              |
+              |_sport: name1.pdf, name2.pdf, ..
+              |
+              |_usaChinaCoronaPolitik: name1.pdf, name2.pdf, ..
+              |
+              |_usaChinaPolitik: name1.pdf, name2.pdf, ..
+              |
+              |_usaCoronaPolitik: name1.pdf, name2.pdf, ..
+              |
+              |_usaPolitik: name1.pdf, name2.pdf, ..
+
+2.
+change in text_classifier/Dataset.py: 
+- the FOLDER_PATH to your Dataset folder path (String)
+- the FILE_PATH to the location where you want to save the pandas parquet files (String)
+
+(line 102 and 103 you can change the filenames)
+
+(not recommended):
+you can change in def __create_parquet (line 40) prep_texts to False if you dont want any preprocessing 
+you can change in (line 76) filter_stop_words to False if you dont want stop word remove
+
+3.
+change in text_classifier/k-tranformer.py:
+- (line 21) creating_parquet at the first run to True (creates parquet file)
+- (line 21) the language to 'de' if you want to train on the german parquet file 
+   or 'en' on english 
+- (line 55) the path where you want to save the logs (Tensorboard)
+- (line 75) the path where you want to save the trained model
+(take a lock at text_classifier/models/)
+
+4.
+RUN k-transformer.py   you need to do this 2 times 1 for german dataset and 1 for english
+(dont forget to change the language)
+
+5.
+change in text_classifier/LDA.py:
+- (line 6) the language same as in k-transformer.py
+- (line 15) the path to save the LDA model
+
+RUN LDA.py   you need to do this 2 times 1 for german dataset and 1 for english
+(dont forget to change the language)
+
+6.
+change in classify_text.py:
+from Step 3:
+- GERMAN_MODEL_DIR to the saved german k-transformer file folder (String)
+- ENGLISH_MODEL_DIR to the saved english k-transformer file folder (String)
+
+from Step 5:
+- GERMAN_LDA to the saved german LDA model (String with / at end)
+- ENGLISH_LDA to the saved english LDA model (String with / at end)
+
+7.
+FINISHED :)
+
+RUN classify_text.py  (look at README.md)
+
+if any trouble: felixdittrich92@gmail.com
+
+
+
+
+
+
