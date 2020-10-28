@@ -17,13 +17,15 @@ def main():
   parser.add_argument("--input", help='path to a single image', type=str, required=True)
   parser.add_argument("--output", help='name of the output image (example: out.png / out.jpg) ', type=str, required=True)
   parser.add_argument("--sharp", help='sharpening the image (example: --sharp=True) else no sharpening', type=__check_for_boolean_value, required=False)
+  parser.add_argument("--quality", help='describe the quality for the output image (0-100) ', type=int, required=False, default=95)
   args = parser.parse_args()
 
   input_path = args.input
   output = args.output
   sharpen = args.sharp
+  quality = args.quality
   warped = preprocessing_handy_image(input_path, output, sharpen)
-  cv2.imwrite(output, warped)
+  cv2.imwrite(output, warped, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
 
 def preprocessing_handy_image(path, output, sharpen=False):
   """
