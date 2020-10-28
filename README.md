@@ -85,12 +85,14 @@ $ git lfs pull    (need > 3GB)
 2. download [Singularity container](https://singularity.gwdg.de/collections)
 - Collection: document-scanner
 - doc_classifier contains: classify documents
-- doc_utils contains: predict quality of document images, denoising images, helper 
+- post_scan contains: predict quality of document images, denoising images, helper 
 
 3. run container and read help section 
 ```
 $ singularity run-help doc_classifier.sif
-$ singularity run-help doc_utils.sif
+$ singularity run-help post_scan.sif
+
+$ singularity run --bind PATH TO FOLDER post_scan.sif  (bind a folder or file with the container)
 ```
 
 ## Data
