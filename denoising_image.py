@@ -28,13 +28,15 @@ def main():
   parser = argparse.ArgumentParser(description='denoises an document image')
   parser.add_argument("--input", help='path to a single image', type=str, required=True)
   parser.add_argument("--output", help='name of the output image (example: out.png / out.jpg) ', type=str, required=True)
+  parser.add_argument("--quality", help='describe the quality for the output image (0-100) ', type=int, required=False, default=95)
   args = parser.parse_args()
 
   input_path = args.input
   output = args.output
-  denoising_image(input_path, output)
+  quality = args.quality
+  denoising_image(input_path, output, quality)
 
-def denoising_image(input_path, output):
+def denoising_image(input_path, output, quality):
   """
 
   Parameters
@@ -43,6 +45,8 @@ def denoising_image(input_path, output):
       full path to the image
   out : str
       the name of the output file 
+  quality : int
+      the quality of the output image
   """
   model = load_model(MODEl_DIR)
 
@@ -53,7 +57,7 @@ def denoising_image(input_path, output):
     img = np.expand_dims(org_img, axis=0)
     y_pred = np.squeeze(model.predict(img, verbose=1))
     img = cv2.convertScaleAbs(y_pred, alpha=(255.0))
-    cv2.imwrite(output, img)
+    cv2.imwrite(output, img, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
   except:
     _, image_name = os.path.split(input_path)
     print("the file %s is to large" % image_name)
