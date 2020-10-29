@@ -2,6 +2,7 @@
 """
 import os
 import argparse
+import tempfile
 
 import cv2
 
@@ -67,7 +68,11 @@ def denoising_image(input_path, output, quality, res_width):
     y_pred = np.squeeze(model.predict(img, verbose=1))
     img = cv2.convertScaleAbs(y_pred, alpha=(255.0))
     if dim:
-      img = cv2.resize(img, dim, interpolation = cv2.INTER_CUBIC)
+      if dim[0] < 1200:
+        inter = cv2.INTER_AREA
+      else:
+        inter = cv2.INTER_CUBIC
+      img = cv2.resize(img, dim, interpolation = inter)
     cv2.imwrite(output, img, [int(cv2.IMWRITE_JPEG_QUALITY), quality, cv2.IMWRITE_JPEG_OPTIMIZE, 1])
   except:
     _, image_name = os.path.split(input_path)
