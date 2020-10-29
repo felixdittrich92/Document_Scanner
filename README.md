@@ -380,7 +380,7 @@ Probability : 0.990106
 ```
 
 ## Helper
-
+- NOTE: the image needs a clear background / four edges must be recognizable
 - rotate the image correctly and crop the relevant part / add sharpening with --sharp=True
 ```
 python3 handy_helper/helper.py 
