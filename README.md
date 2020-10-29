@@ -183,7 +183,6 @@ Image name : original.jpg                                    Image name : autoen
   Score : 0.728959                                           Score : 0.999801 
 ```
 ### denoising image 
-(recommended: Nvidia gpu >= 8gb ram)
 ```
 python3 denoising_image.py 
 --input=PATH TO SINGLE IMAGE 
