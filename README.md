@@ -189,6 +189,7 @@ python3 denoising_image.py
 --input=PATH TO SINGLE IMAGE 
 --output=NAME OF THE OUTPUT FILE (Example: "out.png")
 --quality=THE QUALITY FOR THE OUTPUT IMAGE 0-100 (Optional)
+--res_width=THE WIDTH SIZE FOR THE OUTPUT IMAGE (ASPECT RATIO IS CALCULATED) (Optional)
 ```
 #### ORIGINAL / RESULT:
 <p float="left">
@@ -388,7 +389,7 @@ python3 handy_helper/helper.py
 --output=NAME OF THE OUTPUT FILE (Example: "out.png")
 --sharp=True (Optional)
 --quality=THE QUALITY FOR THE OUTPUT IMAGE 0-100 (Optional)
---
+--res_width=THE WIDTH SIZE FOR THE OUTPUT IMAGE (ASPECT RATIO IS CALCULATED) (Optional)
 ```
 #### ORIGINAL / RESULT
 

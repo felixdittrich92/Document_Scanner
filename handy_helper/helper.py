@@ -18,16 +18,18 @@ def main():
   parser.add_argument("--output", help='name of the output image (example: out.png / out.jpg) ', type=str, required=True)
   parser.add_argument("--sharp", help='sharpening the image (example: --sharp=True) else no sharpening', type=__check_for_boolean_value, required=False)
   parser.add_argument("--quality", help='describe the quality for the output image (0-100) ', type=int, required=False, default=95)
+  parser.add_argument("--res_width", help='the resolution width for the output image (aspect ratio is calculated)', type=int, required=False, default=None)
   args = parser.parse_args()
 
   input_path = args.input
   output = args.output
   sharpen = args.sharp
   quality = args.quality
-  warped = preprocessing_handy_image(input_path, output, sharpen)
+  res_width = args.res_width
+  warped = preprocessing_handy_image(input_path, output, res_width, sharpen)
   cv2.imwrite(output, warped, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
 
-def preprocessing_handy_image(path, output, sharpen=False):
+def preprocessing_handy_image(path, output, res_width, sharpen=False):
   """
 
   Parameters
@@ -36,14 +38,23 @@ def preprocessing_handy_image(path, output, sharpen=False):
       full path to the image
   out : str
       the name of the output file 
+  res_width : int
+      the width size for the output image
+  sharpen : bool
+      sharpen the output image
 
   Returns
   -------
   object
       processed image
   """
+  dim = None
   # load image, grayscale, Gaussian blur, Otsu's threshold
   image = cv2.imread(path)
+  if res_width is not None:
+    (h, w) = image.shape[:2]
+    r = res_width / float(w)
+    dim = (res_width, int(h * r))
   gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
   blur = cv2.GaussianBlur(gray, (5,5), 0)
   _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
@@ -70,7 +81,9 @@ def preprocessing_handy_image(path, output, sharpen=False):
                               [-1, 9, -1],
                               [-1, -1, -1]])   
 
-    image = cv2.filter2D(image, -1, kernel_filter)           
+    image = cv2.filter2D(image, -1, kernel_filter) 
+  if dim:
+    image = cv2.resize(image, dim, interpolation = cv2.INTER_CUBIC)          
   return image
 
 if __name__ == "__main__":
