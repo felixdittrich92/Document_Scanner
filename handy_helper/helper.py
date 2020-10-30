@@ -27,7 +27,10 @@ def main():
   quality = args.quality
   res_width = args.res_width
   warped = preprocessing_handy_image(input_path, output, res_width, sharpen)
-  cv2.imwrite(output, warped, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
+  try:
+    cv2.imwrite(output, warped, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
+  except: 
+    print("could not find a writer for the specified extension")
 
 def preprocessing_handy_image(path, output, res_width, sharpen=False):
   """
