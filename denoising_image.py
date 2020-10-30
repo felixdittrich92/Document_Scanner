@@ -55,6 +55,7 @@ def denoising_image(input_path, output, quality, res_width):
   """
   model = load_model(MODEl_DIR)
   dim = None
+  _, image_name = os.path.split(input_path)
 
   try:
     org_img = load_img(input_path, color_mode = 'grayscale')
@@ -74,8 +75,9 @@ def denoising_image(input_path, output, quality, res_width):
         inter = cv2.INTER_CUBIC
       img = cv2.resize(img, dim, interpolation = inter)
     cv2.imwrite(output, img, [int(cv2.IMWRITE_JPEG_QUALITY), quality, cv2.IMWRITE_JPEG_OPTIMIZE, 1])
+  except (FileNotFoundError, OSError):
+    print("the file %s cannot found or cannot be read" % image_name)
   except:
-    _, image_name = os.path.split(input_path)
     print("the file %s is to large" % image_name)
 
 if __name__ == "__main__":
