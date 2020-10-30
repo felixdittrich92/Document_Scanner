@@ -47,6 +47,8 @@ def predict(path):
     for image_name in image_names:
       image_path = os.path.join(path, image_name)
       images.append(image_path)
+  else:
+    print("Cannot found file or folder check your path --supported: jpg, jpeg, png")
     
   for image_path in images:
     _, image_name = os.path.split(image_path)
