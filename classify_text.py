@@ -174,37 +174,43 @@ def predict(path, meta, summarize, german_predictor, german_lda, english_predict
     topic_list = list()
     classes = list()
     file_path, doc_name = os.path.split(doc_path)
-    text = extract_text(doc_path)
-    lang = check_language(text)
-    print('--------------------------START PREDICTION: %d / %d --------------------------' % (num, len(docs)))
-    if lang == 'de':
-      predictor = german_predictor
-      topic_model = german_lda
-    elif lang == 'en':
-      predictor = english_predictor
-      topic_model = english_lda
-    else:
-      print("Document name : %s has no recognizable language" % (doc_name))
-    print("Document name : %s\n " % (doc_name))
-    prediction = predictor.predict(text)
-    for preds in prediction:
-      pred_class, proba = preds
-      if proba > 0.5:
-        # translate labels if english text
-        if lang == 'en':
-          try:
-            translator = Translator()
-            pred_class = translator.translate(pred_class, dest='en').text
-          except:
-            print("is already translated")
-        classes.append(pred_class)
-      print("Class : %s\nProbability : %f\n" % (pred_class, proba))
-    doc_text = [text]
-    topic_model.build(doc_text, threshold=0.4)
-    topics = topic_model.topics[ np.argmax(topic_model.predict(doc_text))]
-    topic_list.append(topics)
-    gc.collect()
-    num += 1
+    try:
+      text = extract_text(doc_path)
+      lang = check_language(text)
+      print('--------------------------START PREDICTION: %d / %d --------------------------' % (num, len(docs)))
+      if lang == 'de':
+        predictor = german_predictor
+        topic_model = german_lda
+      elif lang == 'en':
+        predictor = english_predictor
+        topic_model = english_lda
+      else:
+        print("Document name : %s has no recognizable language only german and english language supported" % (doc_name))
+        num += 1
+        continue 
+      print("Document name : %s\n " % (doc_name))
+      prediction = predictor.predict(text)
+      for preds in prediction:
+        pred_class, proba = preds
+        if proba > 0.5:
+          # translate labels if english text
+          if lang == 'en':
+            try:
+              translator = Translator()
+              pred_class = translator.translate(pred_class, dest='en').text
+            except:
+              print("is already translated")
+          classes.append(pred_class)
+        print("Class : %s\nProbability : %f\n" % (pred_class, proba))
+      doc_text = [text]
+      topic_model.build(doc_text, threshold=0.4)
+      topics = topic_model.topics[ np.argmax(topic_model.predict(doc_text))]
+      topic_list.append(topics)
+      gc.collect()
+      num += 1
+    except: 
+      print("Document name : %s cannot be read or has no text" % (doc_name))
+      continue
     
     if meta and lang is not None:
       print('--------------------------CREATE METAFILE--------------------------')
