@@ -50,12 +50,15 @@ def predict(path):
     
   for image_path in images:
     _, image_name = os.path.split(image_path)
-    image = __load_and_preprocess_custom_image(image_path)
-    y_pred = model.predict(np.expand_dims(image, axis=0), verbose=1)[0] 
-    y_pred_class = np.argmax(y_pred)
-    y_pred_prob = y_pred[y_pred_class]*100 
-    score = __calculate_score(y_pred_class, y_pred_prob)
-    print("Image name : %s\n Predicted class : %s\n Score : %f" % (image_name, CLASS_IDXS[y_pred_class], score))
+    try:
+      image = __load_and_preprocess_custom_image(image_path)
+      y_pred = model.predict(np.expand_dims(image, axis=0), verbose=1)[0] 
+      y_pred_class = np.argmax(y_pred)
+      y_pred_prob = y_pred[y_pred_class]*100 
+      score = __calculate_score(y_pred_class, y_pred_prob)
+      print("Image name : %s\n Predicted class : %s\n Score : %f" % (image_name, CLASS_IDXS[y_pred_class], score))
+    except:
+      print("the file %s cannot found or cannot be read" % image_name)
 
 def __calculate_score(y_pred_class, y_pred_prob):
   """calculates the predicted values between zero and one
